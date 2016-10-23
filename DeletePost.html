@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>Admin</title>
+		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+		<style>
+				table, th, td {
+					border: 1px solid black;
+					border-collapse: collapse;
+				}
+				th, td {
+					padding: 5px;
+				}
+				th {
+					text-align: left;
+				}
+		</style>
+	</head>
+	<body>
+		<form action="DeletePosts.php" method="post">
+<?php
+$servername = "mysql.eecs.ku.edu";
+$username = "ajuhl";
+$password = "password1994";
+$dbname = "ajuhl";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
+
+$users= "SELECT user_id FROM Users";
+$userList= $conn->query($users);
+
+if($userList->num_rows > 0){
+	echo "<table>
+				<tr>
+					<th>User</th>
+					<th>Post</th>
+					<th>Delete?</th>
+				</tr>";
+	while($row = $userList->fetch_assoc()){
+		$content= "SELECT content, post_id FROM Posts WHERE author_id = '".$row['user_id']."'";
+		$contentList = $conn->query($content);
+		if($contentList->num_rows > 0){
+			while($column = $contentList->fetch_assoc()){
+			$id = $column['post_id'];
+				echo "<tr>
+							<td>".$row['user_id']."</td>
+							<td>".$column['content']."</td>
+							<td><input type='checkbox' name='remove[]' value='".$id."'></td>
+						</tr>";
+			}
+		}
+	}
+	echo "</table>";
+}
+
+if($userList->num_rows == 0){
+	 echo "<p>0 users</p>";
+}
+?>
+			<input type="submit" class='btn btn-info' role='button'>
+		</form>
+		<br><a href='https://people.eecs.ku.edu/~ajuhl/eecs448/Lab5/Administrator.html' class='btn btn-info' role='button'>Admin page</a>
+		<a href="https://people.eecs.ku.edu/~ajuhl/eecs448/Lab5/index.html" class='btn btn-info' role='button'>Home</a>
+	</body>
+</html>

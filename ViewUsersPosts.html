@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title>View Posts</title>
+		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+	</head>
+	<body>
+		<form action="ViewUserPosts.php" method="post">
+		<select name='post'
+			<?php
+			$servername = "mysql.eecs.ku.edu";
+			$username = "ajuhl";
+			$password = "password1994";
+			$dbname = "ajuhl";
+
+			// Create connection
+			$conn = new mysqli($servername, $username, $password, $dbname);
+
+			// Check connection
+			if ($conn->connect_error) {
+				die("Connection failed: " . $conn->connect_error);
+			}	 
+
+			$query = "SELECT user_id FROM Users";
+			$continue = 1;
+			$result = $conn->query($query);
+			if($result->num_rows == 0){
+				echo " disabled></select>
+							<p> No users created</p>";				
+			}
+			if($result->num_rows > 0){
+			echo ">";
+				while($row = $result->fetch_assoc()){
+					$user=$row['user_id'];
+					
+						echo "<option name='user' value='".$user."'>".$user."</option>";						
+				}
+				echo "</select>";
+			}
+			?>
+		<input type="submit" class='btn btn-info' role='button'>
+		<a href='https://people.eecs.ku.edu/~ajuhl/eecs448/Lab5/Administrator.html' class='btn btn-info' role='button'>Admin page</a>
+		</form>
+	</body>
+</html>
